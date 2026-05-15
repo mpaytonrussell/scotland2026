@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scotland 2026 — The Lads</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #1a3a2a; --green-mid: #2d5c40; --green-light: #4a8c5c;
+    --gold: #c9a84c; --gold-light: #e8c97a;
+    --cream: #f5f0e8; --cream-dark: #e8e0d0;
+    --text: #1a1a1a; --text-muted: #5a5a5a;
+    --white: #ffffff; --card-bg: #ffffff; --border: rgba(0,0,0,0.1);
+    --amber: #e07a30;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; font-size: 15px; }
+
+  /* HERO */
+  .hero { background: var(--green); color: var(--white); padding: 2.5rem 1.25rem 2rem; text-align: center; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(255,255,255,0.015) 40px, rgba(255,255,255,0.015) 80px); }
+  .hero-flag { font-size: 2rem; margin-bottom: 0.5rem; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 700; line-height: 1.1; color: var(--gold-light); letter-spacing: -0.5px; }
+  .hero-sub { font-size: 0.85rem; color: rgba(255,255,255,0.6); margin-top: 0.4rem; letter-spacing: 0.15em; text-transform: uppercase; }
+  .countdown-bar { margin-top: 1.5rem; background: rgba(255,255,255,0.08); border: 1px solid rgba(201,168,76,0.3); border-radius: 12px; padding: 1rem 1.5rem; display: flex; justify-content: center; gap: 1.5rem; }
+  .cd-unit { text-align: center; }
+  .cd-num { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: var(--gold-light); display: block; line-height: 1; }
+  .cd-label { font-size: 0.65rem; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 2px; }
+
+  /* TABS */
+  .tabs { display: flex; background: var(--green); border-top: 1px solid rgba(255,255,255,0.1); position: sticky; top: 0; z-index: 100; overflow-x: auto; scrollbar-width: none; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab-btn { flex: 1; min-width: 64px; padding: 0.7rem 0.4rem; background: none; border: none; color: rgba(255,255,255,0.5); font-family: 'DM Sans', sans-serif; font-size: 0.68rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.07em; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap; }
+  .tab-btn.active { color: var(--gold-light); border-bottom-color: var(--gold); }
+
+  /* SECTIONS */
+  .section { display: none; padding: 1.25rem; max-width: 560px; margin: 0 auto; }
+  .section.active { display: block; }
+
+  /* TRAVEL RIBBONS */
+  .travel-ribbon { display: flex; align-items: center; gap: 0.75rem; border-radius: 12px; padding: 0.8rem 1rem; margin-bottom: 0.75rem; }
+  .travel-ribbon.arrival { background: var(--green-mid); color: var(--white); }
+  .travel-ribbon.depart { background: #2a2a3a; color: var(--white); }
+  .ribbon-icon { font-size: 1.3rem; flex-shrink: 0; }
+  .ribbon-info { flex: 1; }
+  .ribbon-title { font-weight: 500; font-size: 0.9rem; }
+  .ribbon-sub { font-size: 0.75rem; color: rgba(255,255,255,0.65); margin-top: 2px; }
+
+  /* SCHEDULE */
+  .day-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-muted); margin-bottom: 0.4rem; margin-top: 0.75rem; font-weight: 500; }
+  .round-card { background: var(--card-bg); border-radius: 14px; border: 1px solid var(--border); overflow: hidden; margin-bottom: 0.5rem; }
+  .round-card.highlight { border: 2px solid var(--gold); }
+  .round-header { display: flex; align-items: center; padding: 0.75rem 1rem; gap: 0.75rem; }
+  .round-date-box { background: var(--cream); border-radius: 8px; padding: 0.3rem 0.5rem; text-align: center; min-width: 42px; flex-shrink: 0; }
+  .round-date-box .month { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); display: block; }
+  .round-date-box .day-num { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; color: var(--green); display: block; line-height: 1; }
+  .round-info { flex: 1; min-width: 0; }
+  .round-name { font-weight: 500; font-size: 0.95rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .round-details { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+  .round-meta { border-top: 1px solid var(--cream-dark); padding: 0.5rem 1rem; display: flex; gap: 0.75rem; flex-wrap: wrap; }
+  .meta-item { display: flex; align-items: center; gap: 4px; font-size: 0.75rem; color: var(--text-muted); }
+  .meta-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green-light); flex-shrink: 0; }
+  .meta-dot.gold { background: var(--gold); }
+  .meta-dot.amber { background: var(--amber); }
+
+  /* LODGING */
+  .lodging-card { background: var(--card-bg); border-radius: 14px; border: 1px solid var(--border); margin-bottom: 0.75rem; overflow: hidden; }
+  .lodging-header { background: var(--cream-dark); padding: 0.6rem 1rem; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); font-weight: 500; display: flex; justify-content: space-between; align-items: center; }
+  .nights-badge { background: var(--green); color: var(--white); border-radius: 20px; padding: 1px 8px; font-size: 0.65rem; }
+  .lodging-body { padding: 1rem; }
+  .lodging-name { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700; color: var(--green); }
+  .lodging-location { font-size: 0.8rem; color: var(--text-muted); margin-top: 3px; line-height: 1.5; }
+  .lodging-dates { margin-top: 0.75rem; font-size: 0.82rem; color: var(--text); padding: 0.5rem 0.75rem; background: var(--cream); border-radius: 8px; }
+  .who-badge { display: inline-block; font-size: 0.72rem; padding: 0.2rem 0.6rem; border-radius: 20px; margin-top: 0.6rem; background: rgba(26,58,42,0.08); color: var(--green); font-weight: 500; }
+  .lodging-notes { margin-top: 0.6rem; font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; }
+  .lodging-links { margin-top: 0.75rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .lod-link { display: inline-flex; align-items: center; gap: 4px; font-size: 0.76rem; font-weight: 500; padding: 0.3rem 0.7rem; border-radius: 20px; text-decoration: none; border: 1px solid; transition: opacity 0.15s; }
+  .lod-link:hover { opacity: 0.75; }
+  .lod-link.airbnb { color: #c13515; border-color: #c13515; background: rgba(193,53,21,0.05); }
+  .lod-link.maps { color: #1a73e8; border-color: #1a73e8; background: rgba(26,115,232,0.05); }
+  .lod-link.web { color: var(--green); border-color: var(--green); background: rgba(26,58,42,0.05); }
+
+  /* MEDIA */
+  .media-section-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-muted); font-weight: 500; margin: 1rem 0 0.5rem; }
+  .media-card { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border); padding: 0.85rem 1rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.75rem; text-decoration: none; color: var(--text); }
+  .media-icon { width: 38px; height: 38px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; font-weight: 700; }
+  .media-icon.yt { background: #ff0000; color: white; font-size: 1.1rem; }
+  .media-icon.pod { background: var(--green); color: white; font-size: 0.65rem; line-height: 1.1; text-align: center; }
+  .media-icon.read { background: var(--cream-dark); }
+  .media-info { flex: 1; min-width: 0; }
+  .media-title { font-size: 0.88rem; font-weight: 500; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .media-meta { font-size: 0.72rem; color: var(--text-muted); margin-top: 2px; }
+  .media-arrow { color: var(--text-muted); }
+
+  /* SCORES */
+  .score-intro { background: var(--card-bg); border-radius: 14px; border: 1px solid var(--border); padding: 1rem; margin-bottom: 1rem; text-align: center; }
+  .score-intro p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
+  .score-intro strong { color: var(--green); }
+  .score-table-wrap { background: var(--card-bg); border-radius: 14px; border: 1px solid var(--border); overflow: hidden; overflow-x: auto; margin-bottom: 1rem; }
+  .score-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  .score-table thead tr { background: var(--green); color: var(--white); }
+  .score-table th { padding: 0.6rem 0.75rem; text-align: center; font-weight: 500; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; }
+  .score-table th:first-child { text-align: left; }
+  .score-table td { padding: 0.6rem 0.75rem; text-align: center; border-bottom: 1px solid var(--cream-dark); }
+  .score-table td:first-child { text-align: left; font-weight: 500; }
+  .score-table tr:last-child td { border-bottom: none; }
+  .score-table tr:nth-child(even) td { background: var(--cream); }
+  .score-table .leader td { background: rgba(201,168,76,0.12) !important; }
+  .rank-1::before { content: '🥇 '; }
+  .rank-2::before { content: '🥈 '; }
+  .rank-3::before { content: '🥉 '; }
+  .round-tabs { display: flex; gap: 0.4rem; overflow-x: auto; scrollbar-width: none; margin-bottom: 1rem; }
+  .round-tabs::-webkit-scrollbar { display: none; }
+  .round-tab { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 0.35rem 0.9rem; font-size: 0.75rem; font-weight: 500; cursor: pointer; white-space: nowrap; color: var(--text-muted); }
+  .round-tab.active { background: var(--green); color: var(--white); border-color: var(--green); }
+  .add-score-btn { width: 100%; background: var(--green); color: var(--white); border: none; border-radius: 12px; padding: 0.85rem; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 500; cursor: pointer; margin-bottom: 0.75rem; }
+  .no-scores { text-align: center; padding: 2rem 1rem; color: var(--text-muted); font-size: 0.85rem; line-height: 1.6; }
+
+  /* MAP */
+  .map-container { border-radius: 14px; overflow: hidden; border: 1px solid var(--border); margin-bottom: 1rem; height: 400px; }
+  .map-container iframe { width: 100%; height: 100%; border: none; display: block; }
+  .map-legend { background: var(--card-bg); border-radius: 14px; border: 1px solid var(--border); padding: 1rem; }
+  .legend-title { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); font-weight: 500; margin-bottom: 0.75rem; }
+  .legend-item { display: flex; align-items: center; gap: 0.6rem; padding: 0.45rem 0; border-bottom: 1px solid var(--cream-dark); font-size: 0.82rem; text-decoration: none; color: var(--text); }
+  .legend-item:last-child { border-bottom: none; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .legend-dot.golf { background: var(--green); }
+  .legend-dot.old { background: var(--gold); }
+  .legend-dot.stay { background: #3a7bc8; }
+  .legend-name { font-weight: 500; flex: 1; }
+  .legend-loc { font-size: 0.72rem; color: var(--text-muted); }
+  .legend-section { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin: 0.75rem 0 0.25rem; font-weight: 500; }
+  .map-tip { margin-top: 0.75rem; font-size: 0.72rem; color: var(--text-muted); text-align: center; }
+
+  /* MODAL */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 999; align-items: flex-end; justify-content: center; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: var(--white); border-radius: 20px 20px 0 0; width: 100%; max-width: 560px; padding: 1.5rem 1.25rem 2rem; max-height: 85vh; overflow-y: auto; }
+  .modal h3 { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--green); margin-bottom: 1rem; }
+  .modal-close { float: right; background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--text-muted); line-height: 1; margin-top: -4px; }
+  .input-group { margin-bottom: 0.75rem; }
+  .input-label { display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 0.3rem; font-weight: 500; }
+  .input-group select { width: 100%; padding: 0.6rem 0.75rem; border: 1px solid var(--border); border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; background: var(--cream); color: var(--text); }
+  .score-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+  .score-player-input label { display: block; font-size: 0.72rem; color: var(--text-muted); margin-bottom: 0.2rem; }
+  .score-player-input input { width: 100%; padding: 0.5rem 0.6rem; border: 1px solid var(--border); border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; background: var(--cream); text-align: center; }
+  .modal-submit { width: 100%; background: var(--green); color: var(--white); border: none; border-radius: 12px; padding: 0.85rem; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 500; cursor: pointer; margin-top: 1rem; }
+
+  .footer { text-align: center; padding: 2rem 1rem 3rem; color: var(--text-muted); font-size: 0.75rem; }
+  .footer span { color: var(--gold); }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-flag">🏴󠁧󠁢󠁳󠁣󠁴󠁿</div>
+  <h1>Scotland 2026</h1>
+  <div class="hero-sub">June 8–13 · Eight Lads · One Dream</div>
+  <div class="countdown-bar">
+    <div class="cd-unit"><span class="cd-num" id="cd-days">--</span><span class="cd-label">Days</span></div>
+    <div class="cd-unit"><span class="cd-num" id="cd-hours">--</span><span class="cd-label">Hours</span></div>
+    <div class="cd-unit"><span class="cd-num" id="cd-mins">--</span><span class="cd-label">Mins</span></div>
+    <div class="cd-unit"><span class="cd-num" id="cd-secs">--</span><span class="cd-label">Secs</span></div>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="showTab('schedule',this)">Schedule</button>
+  <button class="tab-btn" onclick="showTab('lodging',this)">Lodging</button>
+  <button class="tab-btn" onclick="showTab('scores',this)">Scores</button>
+  <button class="tab-btn" onclick="showTab('media',this)">Watch &amp; Read</button>
+  <button class="tab-btn" onclick="showTab('map',this)">Map</button>
+</div>
+
+<!-- SCHEDULE -->
+<div id="tab-schedule" class="section active">
+
+  <div class="travel-ribbon arrival">
+    <span class="ribbon-icon">✈️</span>
+    <div class="ribbon-info">
+      <div class="ribbon-title">Arrival — Sun Jun 8</div>
+      <div class="ribbon-sub">All 7 Elkhart lads land Edinburgh ~8:30 AM · Drive to St Andrews ~1h 10m</div>
+    </div>
+  </div>
+
+  <div class="day-label">Sun · Jun 8</div>
+  <div class="round-card">
+    <div class="round-header">
+      <div class="round-date-box"><span class="month">Jun</span><span class="day-num">8</span></div>
+      <div class="round-info">
+        <div class="round-name">Elie Golf House Club</div>
+        <div class="round-details">Fife · Est. 1500s</div>
+      </div>
+    </div>
+    <div class="round-meta">
+      <div class="meta-item"><span class="meta-dot gold"></span>3:00 PM — Tee Time 1</div>
+      <div class="meta-item"><span class="meta-dot gold"></span>3:30 PM — Tee Time 2</div>
+      <div class="meta-item"><span class="meta-dot"></span>No caddies available</div>
+    </div>
+  </div>
+
+  <div class="day-label">Mon · Jun 9</div>
+  <div class="round-card">
+    <div class="round-header">
+      <div class="round-date-box"><span class="month">Jun</span><span class="day-num">9</span></div>
+      <div class="round-info">
+        <div class="round-name">Jubilee Course, St Andrews</div>
+        <div class="round-details">St Andrews Links · Swilcan Package</div>
+      </div>
+    </div>
+    <div class="round-meta">
+      <div class="meta-item"><span class="meta-dot gold"></span>11:28 AM — Tee Time 1</div>
+      <div class="meta-item"><span class="meta-dot gold"></span>12:56 PM — Tee Time 2</div>
+      <div class="meta-item"><span class="meta-dot amber"></span>Caddies TBD</div>
+    </div>
+  </div>
+
+  <div class="day-label">Tue · Jun 10 · 🏆 The Big Day</div>
+  <div class="round-card highlight">
+    <div class="round-header">
+      <div class="round-date-box" style="background:#f5f0d0">
+        <span class="month" style="color:var(--gold)">Jun</span>
+        <span class="day-num" style="color:var(--gold)">10</span>
+      </div>
+      <div class="round-info">
+        <div class="round-name" style="font-weight:700;color:var(--green)">THE OLD COURSE</div>
+        <div class="round-details" style="color:var(--gold)">St Andrews · Home of Golf · Lottery WON ✓</div>
+      </div>
+    </div>
+    <div class="round-meta" style="background:#fffdf0">
+      <div class="meta-item"><span class="meta-dot gold"></span>11:20 AM — Tee Time 1</div>
+      <div class="meta-item"><span class="meta-dot gold"></span>12:56 PM — Tee Time 2</div>
+      <div class="meta-item"><span class="meta-dot gold"></span>Caddies Reserved ✓</div>
+    </div>
+  </div>
+
+  <div class="day-label">Wed · Jun 11</div>
+  <div class="round-card">
+    <div class="round-header">
+      <div class="round-date-box"><span class="month">Jun</span><span class="day-num">11</span></div>
+      <div class="round-info">
+        <div class="round-name">Dumbarnie Links</div>
+        <div class="round-details">Fife · Est. 2020 · Global top-ranked</div>
+      </div>
+    </div>
+    <div class="round-meta">
+      <div class="meta-item"><span class="meta-dot gold"></span>9:20 AM — Tee Time 1</div>
+      <div class="meta-item"><span class="meta-dot gold"></span>9:30 AM — Tee Time 2</div>
+      <div class="meta-item"><span class="meta-dot"></span>Caddies Reserved ✓</div>
+    </div>
+  </div>
+
+  <div class="day-label">Thu · Jun 12 · Drive to Edinburgh</div>
+  <div class="round-card">
+    <div class="round-header">
+      <div class="round-date-box"><span class="month">Jun</span><span class="day-num">12</span></div>
+      <div class="round-info">
+        <div class="round-name">North Berwick Golf Club</div>
+        <div class="round-details">East Lothian · World Top 30</div>
+      </div>
+    </div>
+    <div class="round-meta">
+      <div class="meta-item"><span class="meta-dot gold"></span>12:00 PM — Tee Time 1</div>
+      <div class="meta-item"><span class="meta-dot"></span>Caddies Reserved ✓</div>
+    </div>
+  </div>
+  <div class="round-card">
+    <div class="round-header">
+      <div class="round-date-box"><span class="month">Jun</span><span class="day-num">12</span></div>
+      <div class="round-info">
+        <div class="round-name">Gullane No. 2</div>
+        <div class="round-details">East Lothian · Classic links</div>
+      </div>
+    </div>
+    <div class="round-meta">
+      <div class="meta-item"><span class="meta-dot gold"></span>11:40 AM — Tee Time 2</div>
+      <div class="meta-item"><span class="meta-dot amber"></span>Caddies TBD</div>
+    </div>
+  </div>
+
+  <div class="day-label">Fri · Jun 13</div>
+  <div class="round-card">
+    <div class="round-header">
+      <div class="round-date-box"><span class="month">Jun</span><span class="day-num">13</span></div>
+      <div class="round-info">
+        <div class="round-name">Dunbar Golf Club</div>
+        <div class="round-details">East Lothian · Seaside links</div>
+      </div>
+    </div>
+    <div class="round-meta">
+      <div class="meta-item"><span class="meta-dot gold"></span>10:50 AM — Tee Time 1</div>
+      <div class="meta-item"><span class="meta-dot gold"></span>11:00 AM — Tee Time 2</div>
+      <div class="meta-item"><span class="meta-dot"></span>Forecaddie per group</div>
+    </div>
+  </div>
+
+  <div class="day-label">Sat · Jun 14</div>
+  <div class="travel-ribbon depart">
+    <span class="ribbon-icon">✈️</span>
+    <div class="ribbon-info">
+      <div class="ribbon-title">Departure — Sat Jun 14</div>
+      <div class="ribbon-sub">Payton departs 6:00 AM · Elkhart lads fly out ~11:30 AM</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- LODGING -->
+<div id="tab-lodging" class="section">
+
+  <div class="lodging-card">
+    <div class="lodging-header">St Andrews · Nights 1–4 <span class="nights-badge">4 nights</span></div>
+    <div class="lodging-body">
+      <div class="lodging-name">Mar House</div>
+      <div class="lodging-location">📍 St Andrews, Fife · 3 bed / 4 beds / 2 baths · ★ 5.0</div>
+      <div class="lodging-dates">☀️ Sun Jun 8 → Thu Jun 12 morning</div>
+      <div class="who-badge">👤 Pat, Matt E, Matt P, John</div>
+      <div class="lodging-notes">Comfortable and homely. 10–15 min walk to St Andrews town centre, 2 min walk to East Sands Beach.</div>
+      <div class="lodging-links">
+        <a class="lod-link airbnb" href="https://www.airbnb.com/rooms/722954551476816234" target="_blank">Airbnb listing</a>
+        <a class="lod-link maps" href="https://www.google.com/maps/search/Mar+House+St+Andrews+KY16/@56.34,-2.79,15z" target="_blank">Google Maps</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="lodging-card">
+    <div class="lodging-header">St Andrews · Nights 1–4 <span class="nights-badge">4 nights</span></div>
+    <div class="lodging-body">
+      <div class="lodging-name">Modern 3-Bed with Putting Green</div>
+      <div class="lodging-location">📍 St Andrews, Fife · 3 bed / 5 beds / 1.5 baths · ★ 4.99</div>
+      <div class="lodging-dates">☀️ Sun Jun 8 → Thu Jun 12 morning</div>
+      <div class="who-badge">👤 Payton, Kyle, Brock, Paul</div>
+      <div class="lodging-notes">Renovated golf-themed house with a putting green in the back garden. 10 min walk to East Sands Beach.</div>
+      <div class="lodging-links">
+        <a class="lod-link airbnb" href="https://www.airbnb.com/rooms/45464221" target="_blank">Airbnb listing</a>
+        <a class="lod-link maps" href="https://www.google.com/maps/search/St+Andrews+Fife+golf+airbnb/@56.335,-2.795,14z" target="_blank">Google Maps</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="lodging-card">
+    <div class="lodging-header">Edinburgh · Nights 5–6 <span class="nights-badge">2 nights</span></div>
+    <div class="lodging-body">
+      <div class="lodging-name">The Place Hotel</div>
+      <div class="lodging-location">📍 34–36 York Place, Edinburgh EH1 3HU · ★ 4.1<br>☎ +44 131 556 7575</div>
+      <div class="lodging-dates">🏙️ Thu Jun 12 → Sat Jun 14</div>
+      <div class="who-badge">👤 2 rooms · 2 beds each</div>
+      <div class="lodging-notes">Boutique hotel in central Edinburgh. 10 min walk to Waverley Station, close to the Royal Mile and Edinburgh Castle.</div>
+      <div class="lodging-links">
+        <a class="lod-link web" href="https://www.theplaceedinburgh.co.uk" target="_blank">Website</a>
+        <a class="lod-link maps" href="https://www.google.com/maps/place/The+Place+Hotel/@55.9565,-3.1901,17z" target="_blank">Google Maps</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="lodging-card">
+    <div class="lodging-header">Edinburgh · Nights 5–6 <span class="nights-badge">2 nights</span></div>
+    <div class="lodging-body">
+      <div class="lodging-name">No.1 Apartments — New Town</div>
+      <div class="lodging-location">📍 15A Dundas Street, Edinburgh EH3 6QG · ★ 4.9<br>☎ +44 131 622 2880</div>
+      <div class="lodging-dates">🏙️ Thu Jun 12 → Sat Jun 14</div>
+      <div class="who-badge">👤 Remaining group</div>
+      <div class="lodging-notes">Luxury apartments in Edinburgh New Town — beautifully furnished with full kitchen. 10 min walk to most sights. Highly rated for space and comfort.</div>
+      <div class="lodging-links">
+        <a class="lod-link web" href="https://www.no1apartmentsedinburgh.co.uk" target="_blank">Website</a>
+        <a class="lod-link maps" href="https://www.google.com/maps/place/No.1+Apartments+-+New+Town/@55.9566,-3.1986,17z" target="_blank">Google Maps</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- SCORES -->
+<div id="tab-scores" class="section">
+  <div class="score-intro">
+    <p>Payton will enter scores after each round.<br><strong>Lowest combined score over the week wins the belt.</strong><br>Scores save in your browser.</p>
+  </div>
+  <div class="round-tabs" id="roundTabs"></div>
+  <button class="add-score-btn" onclick="openScoreModal()">+ Enter Scores for a Round</button>
+  <div id="scoreboard"></div>
+</div>
+
+<!-- MEDIA -->
+<div id="tab-media" class="section">
+
+  <!-- ELIE -->
+  <div class="media-section-label">⛳ Elie Golf House Club — Sun Jun 8</div>
+  <a class="media-card" href="https://www.youtube.com/results?search_query=Elie+Golf+House+Club+Scotland" target="_blank">
+    <div class="media-icon yt">▶</div>
+    <div class="media-info"><div class="media-title">Elie Golf House Club — Video</div><div class="media-meta">YouTube</div></div>
+    <span class="media-arrow">›</span>
+  </a>
+  <a class="media-card" href="https://www.ukgolfguy.com/elie-golf-house-club" target="_blank">
+    <div class="media-icon read" style="font-size:0.6rem;font-weight:700;color:var(--green);text-align:center;line-height:1.2">UK<br>GUY</div>
+    <div class="media-info"><div class="media-title">Elie — UK Golf Guy Review</div><div class="media-meta">ukgolfguy.com · "A must-play for any trip to Fife"</div></div>
+    <span class="media-arrow">›</span>
+  </a>
+  <a class="media-card" href="https://www.thefriedegg.com/courses/elie-golf-house-club" target="_blank">
+    <div class="media-icon" style="background:#f5c518;color:#1a1a1a;font-size:0.6rem;font-weight:700;text-align:center;line-height:1.2;border-radius:8px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;flex-shrink:0">FRIED<br>EGG</div>
+    <div class="media-info"><div class="media-title">Elie — Fried Egg Review</div><div class="media-meta">thefriedegg.com · Architecture &amp; course rating</div></div>
+    <span class="media-arrow">›</span>
+  </a>
+
+  <!-- JUBILEE -->
+  <div class="media-section-label" style="margin-top:1.1rem">⛳ Jubilee Course — Mon Jun 9</div>
+  <a class="media-card" href="https://www.youtube.com/results?search_query=Jubilee+Course+St+Andrews+golf" target="_blank">
+    <div class="media-icon yt">▶</div>
+    <div class="media-info"><div class="media-title">Jubilee Course, St Andrews — Video</div><div class="media-meta">YouTube</div></div>
+    <span class="media-arrow">›</span>
+  </a>
+
+  <!-- OLD COURSE -->
+  <div class="media-section-label" style="margin-top:1.1rem">🏆 The Old Course — Tue Jun 10</div>
+  <a class="media-card" href="https://www.youtube.com/results?search_query=Old+Course+St+Andrews+golf+flyover" target="_blank">
+    <div class="media-icon yt">▶</div>
+    <div class="media-info"><div class="media-title">The Old Course — Flyover &amp; Course Tour</div><div class="media-meta">YouTube</div></div>
+    <span class="media-arrow">›</span>
+  </a>
+  <a class="media-card" href="https://www.ukgolfguy.com/the-old-course-st-andrews-golf-course-review" target="_blank">
+    <div class="media-icon read" style="font-size:0.6rem;font-weight:700;color:var(--green);text-align:center;line-height:1.2">UK<br>GUY</div>
+    <div class="media-info"><div class="media-title">Old Course — UK Golf Guy Review</div><div class="media-meta">ukgolfguy.com · Tips, history &amp; how to play it</div></div>
+    <span class="media-arrow">›</span>
+  </a>
+  <a class="media-card" href="https://www.thefriedegg.com/courses/the-old-course---st-andrews" target="_blank">
+    <div class="media-icon" style="background:#f5c518;color:#1a1a1a;font-size:0.6rem;font-weight:700;text-align:center;line-height:1.2;border-radius:8px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;flex-shrink:0">FRIED<br>EGG</div>
+    <div class="media-info"><div class="media-title">Old Course — Fried Egg Review</div><div class="media-meta">thefriedegg.com · Architecture &amp; course rating</div></div>
+    <span class="media-arrow">›</span>
+  </a>
+
+  <!-- DUMBARNIE -->
+  <div class="media-section-label" style="margin-top:1.1rem">⛳ Dumbarnie Links — Wed Jun 11</div>
+  <a class="media-card" href="https://www.youtube.com/results?search_query=Dumbarnie+Links+golf+flyover" target="_blank">
+    <div class="media-icon yt">▶</div>
+    <div class="media-info"><div class="media-title">Dumbarnie Links — Course Flyover</div><div class="media-meta">YouTube</div></div>
+    <span class="media-arrow">›</span>
+  </a>
+  <a class="media-card" href="https://www.ukgolfguy.com/dumbarnie-links" target="_blank">
+    <div class="media-icon read" style="font-size:0.6rem;font-weight:700;color:var(--green);text-align:center;line-height:1.2">UK<br>GUY</div>
+    <div class="media-info"><div class="media-title">Dumbarnie — UK Golf Guy Review</div><div class="media-meta">ukgolfguy.com · In-depth course review</div></div>
+    <span class="media-arrow">›</span>
+  </a>
+
+  <!-- NORTH BERWICK -->
+  <div class="media-section-label" style="margin-top:1.1rem">⛳ North Berwick — Thu Jun 12</div>
+  <a class="media-card" href="https://www.youtube.com/results?search_query=North+Berwick+Golf+Club+course+tour" target="_blank">
+    <div class="media-icon yt">▶</div>
+    <div class="media-info"><div class="media-title">North Berwick — Course Tour</div><div class="media-meta">YouTube</div></div>
+    <span class="media-arrow">›</span>
+  </a>
+  <a class="media-card" href="https://www.ukgolfguy.com/north-berwick-golf-course-review" target="_blank">
+    <div class="media-icon read" style="font-size:0.6rem;font-weight:700;color:var(--green);text-align:center;line-height:1.2">UK<br>GUY</div>
+    <div class="media-info"><div class="media-title">North Berwick — UK Golf Guy Review</div><div class="media-meta">ukgolfguy.com · "The most fun course in the world"</div></div>
+    <span class="media-arrow">›</span>
+  </a>
+  <a class="media-card" href="https://www.thefriedegg.com/courses/north-berwick-golf-club-west-links" target="_blank">
+    <div class="media-icon" style="background:#f5c518;color:#1a1a1a;font-size:0.6rem;font-weight:700;text-align:center;line-height:1.2;border-radius:8px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;flex-shrink:0">FRIED<br>EGG</div>
+    <div class="media-info"><div class="media-title">North Berwick — Fried Egg Review</div><div class="media-meta">thefriedegg.com · Architecture &amp; course rating</div></div>
+    <span class="media-arrow">›</span>
+  </a>
+
+  <!-- GULLANE -->
+  <div class="media-section-label" style="margin-top:1.1rem">⛳ Gullane No. 2 — Thu Jun 12</div>
+  <a class="media-card" href="https://www.youtube.com/results?search_query=Gullane+golf+No2+Scotland" target="_blank">
+    <div class="media-icon yt">▶</div>
+    <div class="media-info"><div class="media-title">Gullane No. 2 — Video</div><div class="media-meta">YouTube</div></div>
+    <span class="media-arrow">›</span>
+  </a>
+  <a class="media-card" href="https://www.ukgolfguy.com/gullane-golf-club-course-no-2" target="_blank">
+    <div class="media-icon read" style="font-size:0.6rem;font-weight:700;color:var(--green);text-align:center;line-height:1.2">UK<br>GUY</div>
+    <div class="media-info"><div class="media-title">Gullane No. 2 — UK Golf Guy Review</div><div class="media-meta">ukgolfguy.com · In-depth course review</div></div>
+    <span class="media-arrow">›</span>
+  </a>
+
+  <!-- DUNBAR -->
+  <div class="media-section-label" style="margin-top:1.1rem">⛳ Dunbar Golf Club — Fri Jun 13</div>
+  <a class="media-card" href="https://www.youtube.com/results?search_query=Dunbar+Golf+Club+Scotland" target="_blank">
+    <div class="media-icon yt">▶</div>
+    <div class="media-info"><div class="media-title">Dunbar Golf Club — Video</div><div class="media-meta">YouTube</div></div>
+    <span class="media-arrow">›</span>
+  </a>
+  <a class="media-card" href="https://www.ukgolfguy.com/dunbar-golf-club" target="_blank">
+    <div class="media-icon read" style="font-size:0.6rem;font-weight:700;color:var(--green);text-align:center;line-height:1.2">UK<br>GUY</div>
+    <div class="media-info"><div class="media-title">Dunbar — UK Golf Guy Review</div><div class="media-meta">ukgolfguy.com · In-depth course review</div></div>
+    <span class="media-arrow">›</span>
+  </a>
+  <a class="media-card" href="https://www.thefriedegg.com/courses/dunbar-golf-club" target="_blank">
+    <div class="media-icon" style="background:#f5c518;color:#1a1a1a;font-size:0.6rem;font-weight:700;text-align:center;line-height:1.2;border-radius:8px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;flex-shrink:0">FRIED<br>EGG</div>
+    <div class="media-info"><div class="media-title">Dunbar — Fried Egg Review</div><div class="media-meta">thefriedegg.com · Architecture &amp; course rating</div></div>
+    <span class="media-arrow">›</span>
+  </a>
+
+</div>
+
+<!-- MAP -->
+<div id="tab-map" class="section">
+  <div class="map-container">
+    <iframe
+      src="https://www.google.com/maps/embed?pb=!1m56!1m12!1m3!1d589025!2d-2.9!3d56.15!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m41!3e0!4m5!1s0x4887c5947ef6f8db%3A0x4b4b87d62e7a94b4!2sElie+Golf+House+Club%2C+Fife!3m2!1d56.1917!2d-2.8293!4m5!1s0x48882b89098566f9%3A0x84264d9dcd59605a!2sJubilee+Course%2C+St+Andrews!3m2!1d56.347!2d-2.8086!4m5!1s0x488827baa574dbb3%3A0x53b87e769ed4e4b4!2sOld+Course%2C+St+Andrews!3m2!1d56.3437!2d-2.8023!4m5!1s0x488723958881a38d%3A0x3fce42926230f8c9!2sDumbarnie+Golf+Links%2C+Leven!3m2!1d56.2128!2d-2.885!4m5!1s0x4887a8fece6821a3%3A0x49a87b994979a79b!2sNorth+Berwick+Golf+Club!3m2!1d56.0587!2d-2.7274!4m5!1s0x4887333866b23369%3A0xb84b8b168b42fc14!2sDunbar+Golf+Club!3m2!1d55.992!2d-2.4969!5e0!3m2!1sen!2suk!4v1"
+      allowfullscreen loading="lazy">
+    </iframe>
+  </div>
+
+  <div class="map-legend">
+    <div class="legend-title">All Locations — Tap to Open in Maps</div>
+
+    <div class="legend-section">Courses</div>
+    <a class="legend-item" href="https://www.google.com/maps/search/?api=1&query=Elie+Golf+House+Club+Fife+KY9+1AS" target="_blank">
+      <span class="legend-dot golf"></span><span class="legend-name">Elie Golf House Club</span><span class="legend-loc">Sun Jun 8</span>
+    </a>
+    <a class="legend-item" href="https://www.google.com/maps/search/?api=1&query=Jubilee+Course+St+Andrews+KY16" target="_blank">
+      <span class="legend-dot golf"></span><span class="legend-name">Jubilee Course</span><span class="legend-loc">Mon Jun 9</span>
+    </a>
+    <a class="legend-item" href="https://www.google.com/maps/search/?api=1&query=Old+Course+St+Andrews+W+Sands+Road" target="_blank">
+      <span class="legend-dot old"></span><span class="legend-name">The Old Course ⭐</span><span class="legend-loc">Tue Jun 10</span>
+    </a>
+    <a class="legend-item" href="https://www.google.com/maps/search/?api=1&query=Dumbarnie+Links+A917+Leven+KY8+6JQ" target="_blank">
+      <span class="legend-dot golf"></span><span class="legend-name">Dumbarnie Links</span><span class="legend-loc">Wed Jun 11</span>
+    </a>
+    <a class="legend-item" href="https://www.google.com/maps/search/?api=1&query=North+Berwick+Golf+Club+Beach+Road+EH39" target="_blank">
+      <span class="legend-dot golf"></span><span class="legend-name">North Berwick Golf Club</span><span class="legend-loc">Thu Jun 12</span>
+    </a>
+    <a class="legend-item" href="https://www.google.com/maps/search/?api=1&query=Gullane+Golf+Club+East+Lothian" target="_blank">
+      <span class="legend-dot golf"></span><span class="legend-name">Gullane No. 2</span><span class="legend-loc">Thu Jun 12</span>
+    </a>
+    <a class="legend-item" href="https://www.google.com/maps/search/?api=1&query=Dunbar+Golf+Club+EH42+1BW" target="_blank">
+      <span class="legend-dot golf"></span><span class="legend-name">Dunbar Golf Club</span><span class="legend-loc">Fri Jun 13</span>
+    </a>
+
+    <div class="legend-section">Stays</div>
+    <a class="legend-item" href="https://www.airbnb.com/rooms/722954551476816234" target="_blank">
+      <span class="legend-dot stay"></span><span class="legend-name">Mar House (Airbnb)</span><span class="legend-loc">St Andrews</span>
+    </a>
+    <a class="legend-item" href="https://www.airbnb.com/rooms/45464221" target="_blank">
+      <span class="legend-dot stay"></span><span class="legend-name">3-Bed + Putting Green (Airbnb)</span><span class="legend-loc">St Andrews</span>
+    </a>
+    <a class="legend-item" href="https://www.google.com/maps/place/The+Place+Hotel/@55.9565,-3.1901,17z" target="_blank">
+      <span class="legend-dot stay"></span><span class="legend-name">The Place Hotel</span><span class="legend-loc">Edinburgh</span>
+    </a>
+    <a class="legend-item" href="https://www.google.com/maps/place/No.1+Apartments+-+New+Town/@55.9566,-3.1986,17z" target="_blank">
+      <span class="legend-dot stay"></span><span class="legend-name">No.1 Apartments New Town</span><span class="legend-loc">Edinburgh</span>
+    </a>
+    <div class="map-tip">Green = golf · Blue = stay · Gold = Old Course</div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="scoreModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeScoreModal()">×</button>
+    <h3>Enter Round Scores</h3>
+    <div class="input-group">
+      <label class="input-label">Round</label>
+      <select id="modal-round">
+        <option value="Elie">Sun Jun 8 — Elie</option>
+        <option value="Jubilee">Mon Jun 9 — Jubilee</option>
+        <option value="Old Course">Tue Jun 10 — Old Course ⭐</option>
+        <option value="Dumbarnie">Wed Jun 11 — Dumbarnie</option>
+        <option value="North Berwick">Thu Jun 12 — North Berwick</option>
+        <option value="Gullane No. 2">Thu Jun 12 — Gullane No. 2</option>
+        <option value="Dunbar">Fri Jun 13 — Dunbar</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <label class="input-label">Gross scores</label>
+      <div class="score-inputs" id="score-inputs"></div>
+    </div>
+    <button class="modal-submit" onclick="saveScores()">Save Scores</button>
+  </div>
+</div>
+
+<div class="footer">Made with ⛳ for the lads · <span>Scotland 2026</span></div>
+
+<script>
+const PLAYERS = ['Payton','Pat','Kyle','Brock','Paul','Matt P','John','Matt E'];
+const ROUNDS = ['Elie','Jubilee','Old Course','Dumbarnie','North Berwick','Gullane No. 2','Dunbar'];
+let scores = {};
+try { scores = JSON.parse(localStorage.getItem('scotland2026_scores') || '{}'); } catch(e) {}
+
+function showTab(name, el) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  if (el) el.classList.add('active');
+}
+
+function countdown() {
+  const target = new Date('2026-06-08T08:30:00Z');
+  const diff = target - new Date();
+  if (diff <= 0) { ['days','hours','mins','secs'].forEach(u => document.getElementById('cd-'+u).textContent='0'); return; }
+  document.getElementById('cd-days').textContent = Math.floor(diff/86400000);
+  document.getElementById('cd-hours').textContent = Math.floor((diff%86400000)/3600000);
+  document.getElementById('cd-mins').textContent = Math.floor((diff%3600000)/60000);
+  document.getElementById('cd-secs').textContent = Math.floor((diff%60000)/1000);
+}
+countdown(); setInterval(countdown, 1000);
+
+function openScoreModal() {
+  document.getElementById('score-inputs').innerHTML = PLAYERS.map(p =>
+    `<div class="score-player-input"><label>${p}</label><input type="number" id="score-${p}" placeholder="—" min="60" max="130"></div>`
+  ).join('');
+  document.getElementById('scoreModal').classList.add('open');
+}
+function closeScoreModal() { document.getElementById('scoreModal').classList.remove('open'); }
+
+function saveScores() {
+  const round = document.getElementById('modal-round').value;
+  if (!scores[round]) scores[round] = {};
+  PLAYERS.forEach(p => { const v = document.getElementById('score-'+p).value; if (v) scores[round][p] = parseInt(v); });
+  localStorage.setItem('scotland2026_scores', JSON.stringify(scores));
+  closeScoreModal(); renderScores();
+}
+
+function renderScores() {
+  const played = ROUNDS.filter(r => scores[r] && Object.keys(scores[r]).length > 0);
+  const tabsEl = document.getElementById('roundTabs');
+  const boardEl = document.getElementById('scoreboard');
+  if (!played.length) {
+    tabsEl.innerHTML = '';
+    boardEl.innerHTML = '<div class="no-scores">No scores yet.<br>Payton will post them after each round. 🏌️</div>';
+    return;
+  }
+  tabsEl.innerHTML = ['Leaderboard',...played].map((t,i) =>
+    `<button class="round-tab ${i===0?'active':''}" onclick="showRoundTab('${t}',this)">${t}</button>`
+  ).join('');
+  renderLeaderboard();
+}
+
+function showRoundTab(name, el) {
+  document.querySelectorAll('.round-tab').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  name === 'Leaderboard' ? renderLeaderboard() : renderRound(name);
+}
+
+function renderLeaderboard() {
+  const played = ROUNDS.filter(r => scores[r] && Object.keys(scores[r]).length > 0);
+  const totals = PLAYERS.map(p => {
+    let total = 0, rounds = 0;
+    ROUNDS.forEach(r => { if (scores[r]&&scores[r][p]) { total+=scores[r][p]; rounds++; } });
+    return {name:p,total,rounds};
+  }).filter(p=>p.rounds>0).sort((a,b)=>a.total-b.total);
+  document.getElementById('scoreboard').innerHTML = `
+    <div class="score-table-wrap"><table class="score-table">
+      <thead><tr><th>Player</th>${played.map(r=>`<th>${r.split(' ')[0]}</th>`).join('')}<th>Total</th></tr></thead>
+      <tbody>${totals.map((p,i)=>`
+        <tr class="${i===0?'leader':''}">
+          <td class="${i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':''}">${p.name}</td>
+          ${played.map(r=>`<td>${scores[r]&&scores[r][p.name]?scores[r][p.name]:'—'}</td>`).join('')}
+          <td><strong>${p.total}</strong></td>
+        </tr>`).join('')}
+      </tbody>
+    </table></div>`;
+}
+
+function renderRound(round) {
+  const data = scores[round]||{};
+  const sorted = Object.entries(data).sort((a,b)=>a[1]-b[1]);
+  if (!sorted.length) { document.getElementById('scoreboard').innerHTML='<div class="no-scores">No scores yet.</div>'; return; }
+  document.getElementById('scoreboard').innerHTML = `
+    <div class="score-table-wrap"><table class="score-table">
+      <thead><tr><th>Player</th><th>Score</th></tr></thead>
+      <tbody>${sorted.map(([name,sc],i)=>`
+        <tr class="${i===0?'leader':''}">
+          <td class="${i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':''}">${name}</td>
+          <td><strong>${sc}</strong></td>
+        </tr>`).join('')}
+      </tbody>
+    </table></div>`;
+}
+renderScores();
+</script>
+</body>
+</html>
