@@ -117,6 +117,9 @@
   .round-tab.active { background: var(--green); color: var(--white); border-color: var(--green); }
   .add-score-btn { width: 100%; background: var(--green); color: var(--white); border: none; border-radius: 12px; padding: 0.85rem; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 500; cursor: pointer; margin-bottom: 0.75rem; }
   .no-scores { text-align: center; padding: 2rem 1rem; color: var(--text-muted); font-size: 0.85rem; line-height: 1.6; }
+  .score-type-toggle { display:flex; gap:0.4rem; margin-bottom:1rem; }
+  .stt-btn { flex:1; padding:0.5rem; background:var(--card-bg); border:1px solid var(--border); border-radius:20px; font-family:'DM Sans',sans-serif; font-size:0.8rem; font-weight:500; color:var(--text-muted); cursor:pointer; transition:all 0.15s; }
+  .stt-btn.active { background:var(--green); color:var(--white); border-color:var(--green); }
 
   /* MAP */
   .map-container { border-radius: 14px; overflow: hidden; border: 1px solid var(--border); margin-bottom: 1rem; height: 400px; }
@@ -262,23 +265,12 @@
       </div>
     </div>
     <div class="round-meta">
-      <div class="meta-item"><span class="meta-dot gold"></span>12:00 PM — Tee Time 1</div>
+      <div class="meta-item"><span class="meta-dot gold"></span>2:50 PM — Tee Time 1</div>
+      <div class="meta-item"><span class="meta-dot gold"></span>3:00 PM — Tee Time 2</div>
       <div class="meta-item"><span class="meta-dot"></span>Caddies Reserved ✓</div>
     </div>
   </div>
-  <div class="round-card">
-    <div class="round-header">
-      <div class="round-date-box"><span class="month">Jun</span><span class="day-num">12</span></div>
-      <div class="round-info">
-        <div class="round-name">Gullane No. 2</div>
-        <div class="round-details">East Lothian · Classic links</div>
-      </div>
-    </div>
-    <div class="round-meta">
-      <div class="meta-item"><span class="meta-dot gold"></span>11:40 AM — Tee Time 2</div>
-      <div class="meta-item"><span class="meta-dot amber"></span>Caddies TBD</div>
-    </div>
-  </div>
+
 
   <div class="day-label">Fri · Jun 13</div>
   <div class="round-card">
@@ -375,7 +367,12 @@
 <!-- SCORES -->
 <div id="tab-scores" class="section">
   <div class="score-intro">
-    <p>Payton will enter scores after each round.<br><strong>Lowest combined score over the week wins the belt.</strong><br>Scores save in your browser.</p>
+    <p>Payton enters scores after each round.<br><strong>Toggle between Gross, Net, and Stableford views.</strong><br>Scores save in your browser.</p>
+  </div>
+  <div class="score-type-toggle">
+    <button class="stt-btn active" onclick="setScoreType('gross',this)">Gross</button>
+    <button class="stt-btn" onclick="setScoreType('net',this)">Net</button>
+    <button class="stt-btn" onclick="setScoreType('stableford',this)">Stableford</button>
   </div>
   <div class="round-tabs" id="roundTabs"></div>
   <button class="add-score-btn" onclick="openScoreModal()">+ Enter Scores for a Round</button>
@@ -460,20 +457,7 @@
     <span class="media-arrow">›</span>
   </a>
 
-  <!-- GULLANE -->
-  <div class="media-section-label" style="margin-top:1.1rem">⛳ Gullane No. 2 — Thu Jun 12</div>
-  <a class="media-card" href="https://www.youtube.com/results?search_query=Gullane+golf+No2+Scotland" target="_blank">
-    <div class="media-icon yt">▶</div>
-    <div class="media-info"><div class="media-title">Gullane No. 2 — Video</div><div class="media-meta">YouTube</div></div>
-    <span class="media-arrow">›</span>
-  </a>
-  <a class="media-card" href="https://www.ukgolfguy.com/gullane-golf-club-course-no-2" target="_blank">
-    <div class="media-icon read" style="font-size:0.6rem;font-weight:700;color:var(--green);text-align:center;line-height:1.2">UK<br>GUY</div>
-    <div class="media-info"><div class="media-title">Gullane No. 2 — UK Golf Guy Review</div><div class="media-meta">ukgolfguy.com · In-depth course review</div></div>
-    <span class="media-arrow">›</span>
-  </a>
 
-  <!-- DUNBAR -->
   <div class="media-section-label" style="margin-top:1.1rem">⛳ Dunbar Golf Club — Fri Jun 13</div>
   <a class="media-card" href="https://www.youtube.com/results?search_query=Dunbar+Golf+Club+Scotland" target="_blank">
     <div class="media-icon yt">▶</div>
@@ -558,14 +542,10 @@
         <option value="Old Course">Tue Jun 10 — Old Course ⭐</option>
         <option value="Dumbarnie">Wed Jun 11 — Dumbarnie</option>
         <option value="North Berwick">Thu Jun 12 — North Berwick</option>
-        <option value="Gullane No. 2">Thu Jun 12 — Gullane No. 2</option>
         <option value="Dunbar">Fri Jun 13 — Dunbar</option>
       </select>
     </div>
-    <div class="input-group">
-      <label class="input-label">Gross scores</label>
-      <div class="score-inputs" id="score-inputs"></div>
-    </div>
+    <div id="score-inputs"></div>
     <button class="modal-submit" onclick="saveScores()">Save Scores</button>
   </div>
 </div>
@@ -574,9 +554,11 @@
 
 <script>
 const PLAYERS = ['Payton','Pat','Kyle','Brock','Paul','Matt P','John','Matt E'];
-const ROUNDS = ['Elie','Jubilee','Old Course','Dumbarnie','North Berwick','Gullane No. 2','Dunbar'];
+const ROUNDS = ['Elie','Jubilee','Old Course','Dumbarnie','North Berwick','Dunbar'];
 let scores = {};
 try { scores = JSON.parse(localStorage.getItem('scotland2026_scores') || '{}'); } catch(e) {}
+let currentScoreType = 'gross';
+let currentRoundView = 'Leaderboard';
 
 function showTab(name, el) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
@@ -596,10 +578,33 @@ function countdown() {
 }
 countdown(); setInterval(countdown, 1000);
 
+function setScoreType(type, el) {
+  currentScoreType = type;
+  document.querySelectorAll('.stt-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  if (currentRoundView === 'Leaderboard') renderLeaderboard();
+  else renderRound(currentRoundView);
+}
+
 function openScoreModal() {
-  document.getElementById('score-inputs').innerHTML = PLAYERS.map(p =>
-    `<div class="score-player-input"><label>${p}</label><input type="number" id="score-${p}" placeholder="—" min="60" max="130"></div>`
-  ).join('');
+  document.getElementById('score-inputs').innerHTML = PLAYERS.map(p => `
+    <div style="border-bottom:1px solid var(--cream-dark);padding:0.6rem 0;margin-bottom:0.25rem">
+      <div style="font-weight:500;font-size:0.85rem;margin-bottom:0.4rem;color:var(--green)">${p}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.4rem">
+        <div>
+          <label style="display:block;font-size:0.65rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:2px">Gross</label>
+          <input type="number" id="gross-${p}" placeholder="—" min="60" max="130" style="width:100%;padding:0.45rem 0.4rem;border:1px solid var(--border);border-radius:7px;font-family:'DM Sans',sans-serif;font-size:0.9rem;background:var(--cream);text-align:center">
+        </div>
+        <div>
+          <label style="display:block;font-size:0.65rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:2px">Net</label>
+          <input type="number" id="net-${p}" placeholder="—" min="50" max="130" style="width:100%;padding:0.45rem 0.4rem;border:1px solid var(--border);border-radius:7px;font-family:'DM Sans',sans-serif;font-size:0.9rem;background:var(--cream);text-align:center">
+        </div>
+        <div>
+          <label style="display:block;font-size:0.65rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:2px">Stbl</label>
+          <input type="number" id="stbl-${p}" placeholder="—" min="0" max="50" style="width:100%;padding:0.45rem 0.4rem;border:1px solid var(--border);border-radius:7px;font-family:'DM Sans',sans-serif;font-size:0.9rem;background:var(--cream);text-align:center">
+        </div>
+      </div>
+    </div>`).join('');
   document.getElementById('scoreModal').classList.add('open');
 }
 function closeScoreModal() { document.getElementById('scoreModal').classList.remove('open'); }
@@ -607,9 +612,26 @@ function closeScoreModal() { document.getElementById('scoreModal').classList.rem
 function saveScores() {
   const round = document.getElementById('modal-round').value;
   if (!scores[round]) scores[round] = {};
-  PLAYERS.forEach(p => { const v = document.getElementById('score-'+p).value; if (v) scores[round][p] = parseInt(v); });
+  PLAYERS.forEach(p => {
+    if (!scores[round][p]) scores[round][p] = {};
+    const g = document.getElementById('gross-'+p).value;
+    const n = document.getElementById('net-'+p).value;
+    const s = document.getElementById('stbl-'+p).value;
+    if (g) scores[round][p].gross = parseInt(g);
+    if (n) scores[round][p].net = parseInt(n);
+    if (s) scores[round][p].stbl = parseInt(s);
+  });
   localStorage.setItem('scotland2026_scores', JSON.stringify(scores));
-  closeScoreModal(); renderScores();
+  closeScoreModal();
+  renderScores();
+}
+
+function getVal(round, player, type) {
+  const d = scores[round] && scores[round][player];
+  if (!d) return null;
+  // support old format (plain number) and new format (object)
+  if (typeof d === 'number') return type === 'gross' ? d : null;
+  return d[type] != null ? d[type] : null;
 }
 
 function renderScores() {
@@ -622,31 +644,46 @@ function renderScores() {
     return;
   }
   tabsEl.innerHTML = ['Leaderboard',...played].map((t,i) =>
-    `<button class="round-tab ${i===0?'active':''}" onclick="showRoundTab('${t}',this)">${t}</button>`
+    `<button class="round-tab ${t===currentRoundView?'active':''}" onclick="showRoundTab('${t}',this)">${t}</button>`
   ).join('');
-  renderLeaderboard();
+  if (currentRoundView === 'Leaderboard') renderLeaderboard();
+  else renderRound(currentRoundView);
 }
 
 function showRoundTab(name, el) {
   document.querySelectorAll('.round-tab').forEach(b => b.classList.remove('active'));
   el.classList.add('active');
+  currentRoundView = name;
   name === 'Leaderboard' ? renderLeaderboard() : renderRound(name);
+}
+
+function rankLabel(i) {
+  return i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'';
 }
 
 function renderLeaderboard() {
   const played = ROUNDS.filter(r => scores[r] && Object.keys(scores[r]).length > 0);
+  const type = currentScoreType;
+  const higherIsBetter = type === 'stableford';
+
   const totals = PLAYERS.map(p => {
     let total = 0, rounds = 0;
-    ROUNDS.forEach(r => { if (scores[r]&&scores[r][p]) { total+=scores[r][p]; rounds++; } });
-    return {name:p,total,rounds};
-  }).filter(p=>p.rounds>0).sort((a,b)=>a.total-b.total);
+    played.forEach(r => { const v = getVal(r, p, type); if (v != null) { total += v; rounds++; } });
+    return {name: p, total, rounds};
+  }).filter(p => p.rounds > 0)
+    .sort((a,b) => higherIsBetter ? b.total - a.total : a.total - b.total);
+
+  const typeLabel = type === 'gross' ? 'Gross' : type === 'net' ? 'Net' : 'Stableford';
+  const winNote = higherIsBetter ? '↑ highest wins' : '↓ lowest wins';
+
   document.getElementById('scoreboard').innerHTML = `
+    <div style="font-size:0.7rem;color:var(--text-muted);margin-bottom:0.5rem;text-align:right">${typeLabel} · ${winNote}</div>
     <div class="score-table-wrap"><table class="score-table">
       <thead><tr><th>Player</th>${played.map(r=>`<th>${r.split(' ')[0]}</th>`).join('')}<th>Total</th></tr></thead>
       <tbody>${totals.map((p,i)=>`
         <tr class="${i===0?'leader':''}">
-          <td class="${i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':''}">${p.name}</td>
-          ${played.map(r=>`<td>${scores[r]&&scores[r][p.name]?scores[r][p.name]:'—'}</td>`).join('')}
+          <td class="${rankLabel(i)}">${p.name}</td>
+          ${played.map(r=>{ const v=getVal(r,p.name,type); return `<td>${v!=null?v:'—'}</td>`; }).join('')}
           <td><strong>${p.total}</strong></td>
         </tr>`).join('')}
       </tbody>
@@ -654,16 +691,25 @@ function renderLeaderboard() {
 }
 
 function renderRound(round) {
-  const data = scores[round]||{};
-  const sorted = Object.entries(data).sort((a,b)=>a[1]-b[1]);
-  if (!sorted.length) { document.getElementById('scoreboard').innerHTML='<div class="no-scores">No scores yet.</div>'; return; }
+  const type = currentScoreType;
+  const higherIsBetter = type === 'stableford';
+  const entries = PLAYERS.map(p => ({ name: p, val: getVal(round, p, type) }))
+    .filter(p => p.val != null)
+    .sort((a,b) => higherIsBetter ? b.val - a.val : a.val - b.val);
+
+  if (!entries.length) {
+    document.getElementById('scoreboard').innerHTML = `<div class="no-scores">No ${type} scores for this round yet.</div>`;
+    return;
+  }
+  const typeLabel = type === 'gross' ? 'Gross' : type === 'net' ? 'Net' : 'Stableford';
   document.getElementById('scoreboard').innerHTML = `
+    <div style="font-size:0.7rem;color:var(--text-muted);margin-bottom:0.5rem;text-align:right">${typeLabel} · ${round}</div>
     <div class="score-table-wrap"><table class="score-table">
-      <thead><tr><th>Player</th><th>Score</th></tr></thead>
-      <tbody>${sorted.map(([name,sc],i)=>`
+      <thead><tr><th>Player</th><th>${typeLabel}</th></tr></thead>
+      <tbody>${entries.map(({name,val},i)=>`
         <tr class="${i===0?'leader':''}">
-          <td class="${i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':''}">${name}</td>
-          <td><strong>${sc}</strong></td>
+          <td class="${rankLabel(i)}">${name}</td>
+          <td><strong>${val}</strong></td>
         </tr>`).join('')}
       </tbody>
     </table></div>`;
