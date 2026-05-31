@@ -32,7 +32,7 @@
   /* TABS */
   .tabs { display: flex; background: var(--green); border-top: 1px solid rgba(255,255,255,0.1); position: sticky; top: 0; z-index: 100; overflow-x: auto; scrollbar-width: none; }
   .tabs::-webkit-scrollbar { display: none; }
-  .tab-btn { flex: 1; min-width: 64px; padding: 0.7rem 0.4rem; background: none; border: none; color: rgba(255,255,255,0.5); font-family: 'DM Sans', sans-serif; font-size: 0.68rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.07em; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap; }
+  .tab-btn { flex: 1; min-width: 56px; padding: 0.6rem 0.3rem; background: none; border: none; color: rgba(255,255,255,0.5); font-family: 'DM Sans', sans-serif; font-size: 0.62rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap; }
   .tab-btn.active { color: var(--gold-light); border-bottom-color: var(--gold); }
 
   /* SECTIONS */
@@ -153,35 +153,6 @@
 
   .footer { text-align: center; padding: 2rem 1rem 3rem; color: var(--text-muted); font-size: 0.75rem; }
   .footer span { color: var(--gold); }
-
-  /* CHECKLIST */
-  .checklist-progress-wrap { background: var(--card-bg); border-radius: 14px; border: 1px solid var(--border); padding: 0.9rem 1rem; margin-bottom: 0.75rem; }
-  .checklist-progress-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
-  .checklist-progress-label span { font-size: 0.75rem; color: var(--text-muted); }
-  .checklist-progress-label strong { font-size: 0.75rem; color: var(--green); font-weight: 500; }
-  .checklist-progress-track { height: 6px; background: var(--cream-dark); border-radius: 10px; overflow: hidden; }
-  .checklist-progress-fill { height: 100%; background: var(--green); border-radius: 10px; transition: width 0.3s; }
-  .cl-location-header { display: flex; align-items: center; gap: 0.5rem; margin: 1rem 0 0.5rem; }
-  .cl-location-pill { background: var(--green); color: var(--gold-light); font-size: 0.65rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; padding: 0.28rem 0.7rem; border-radius: 20px; white-space: nowrap; }
-  .cl-location-line { flex: 1; height: 1px; background: var(--cream-dark); }
-  .cl-card { background: var(--card-bg); border-radius: 14px; border: 1px solid var(--border); overflow: hidden; margin-bottom: 0.4rem; }
-  .cl-item { display: flex; align-items: flex-start; gap: 0.65rem; padding: 0.65rem 0.85rem; border-bottom: 1px solid var(--cream-dark); cursor: pointer; transition: background 0.12s; }
-  .cl-item:last-child { border-bottom: none; }
-  .cl-item.checked { opacity: 0.5; }
-  .cl-box { width: 20px; height: 20px; border-radius: 6px; border: 1.5px solid var(--cream-dark); background: var(--cream); flex-shrink: 0; margin-top: 2px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
-  .cl-box.done { background: var(--green); border-color: var(--green); }
-  .cl-tick { color: var(--gold-light); font-size: 11px; font-weight: 700; display: none; }
-  .cl-box.done .cl-tick { display: block; }
-  .cl-info { flex: 1; min-width: 0; }
-  .cl-name { font-size: 0.87rem; font-weight: 500; color: var(--text); line-height: 1.3; }
-  .cl-sub { font-size: 0.71rem; color: var(--text-muted); margin-top: 2px; line-height: 1.4; }
-  .cl-tag { display: inline-block; font-size: 0.6rem; font-weight: 500; padding: 0.12rem 0.45rem; border-radius: 10px; margin-top: 4px; margin-right: 3px; text-transform: uppercase; letter-spacing: 0.05em; }
-  .cl-tag-pub { background: rgba(26,58,42,0.1); color: var(--green-mid); }
-  .cl-tag-whisky { background: rgba(201,168,76,0.18); color: #7a5c10; }
-  .cl-tag-food { background: rgba(224,122,48,0.12); color: #8B4000; }
-  .cl-tag-activity { background: rgba(26,58,42,0.08); color: var(--green); }
-  .cl-tag-res { background: rgba(193,53,21,0.1); color: #8B2500; }
-  .cl-link { font-size: 1rem; color: var(--text-muted); text-decoration: none; padding: 0 0.1rem; flex-shrink: 0; margin-top: 1px; }
 </style>
 </head>
 <body>
@@ -202,9 +173,9 @@
   <button class="tab-btn active" onclick="showTab('schedule',this)">Schedule</button>
   <button class="tab-btn" onclick="showTab('lodging',this)">Lodging</button>
   <button class="tab-btn" onclick="showTab('scores',this)">Scores</button>
-  <button class="tab-btn" onclick="showTab('checklist',this)">Checklist</button>
   <button class="tab-btn" onclick="showTab('media',this)">Watch &amp; Read</button>
   <button class="tab-btn" onclick="showTab('map',this)">Map</button>
+  <button class="tab-btn" onclick="showTab('checklist',this)">Checklist</button>
 </div>
 
 <!-- SCHEDULE -->
@@ -577,232 +548,6 @@
   </div>
 </div>
 
-<!-- CHECKLIST -->
-<div id="tab-checklist" class="section">
-
-  <div class="checklist-progress-wrap">
-    <div class="checklist-progress-label">
-      <span>Trip checklist</span>
-      <strong id="cl-prog-label">0 of 0 done</strong>
-    </div>
-    <div class="checklist-progress-track">
-      <div class="checklist-progress-fill" id="cl-prog-fill" style="width:0%"></div>
-    </div>
-  </div>
-
-  <div class="cl-location-header">
-    <div class="cl-location-pill">St Andrews — Pubs & Bars</div>
-    <div class="cl-location-line"></div>
-  </div>
-  <div class="cl-card">
-    <div class="cl-item" data-id="jigger">
-      <div class="cl-box"><span class="cl-tick">✓</span></div>
-      <div class="cl-info">
-        <div class="cl-name">Jigger Inn</div>
-        <div class="cl-sub">Pint on the patio watching drives off 17 — the iconic 19th hole</div>
-        <span class="cl-tag cl-tag-pub">Pub</span>
-      </div>
-      <a class="cl-link" href="https://www.oldcoursehotel.co.uk/dining/jigger-inn/" target="_blank">↗</a>
-    </div>
-    <div class="cl-item" data-id="dunvegan">
-      <div class="cl-box"><span class="cl-tick">✓</span></div>
-      <div class="cl-info">
-        <div class="cl-name">Dunvegan / Golfer's Corner</div>
-        <div class="cl-sub">First stop after your round — walls covered in golf legends</div>
-        <span class="cl-tag cl-tag-pub">Pub</span>
-      </div>
-      <a class="cl-link" href="https://maps.app.goo.gl/dunvegan-st-andrews" target="_blank">↗</a>
-    </div>
-
-    <div class="cl-item" data-id="roadholebar">
-      <div class="cl-box"><span class="cl-tick">✓</span></div>
-      <div class="cl-info">
-        <div class="cl-name">Road Hole Bar</div>
-        <div class="cl-sub">250+ whiskies, floor-to-ceiling windows over the 17th hole</div>
-        <span class="cl-tag cl-tag-whisky">Whisky</span>
-      </div>
-      <a class="cl-link" href="https://www.oldcoursehotel.co.uk/dining/road-hole-bar/" target="_blank">↗</a>
-    </div>
-    <div class="cl-item" data-id="18rusacks">
-      <div class="cl-box"><span class="cl-tick">✓</span></div>
-      <div class="cl-info">
-        <div class="cl-name">18 at Rusacks — Rooftop Bar</div>
-        <div class="cl-sub">Unrivalled views over the 1st & 18th of the Old Course. Best view in golf.</div>
-        <span class="cl-tag cl-tag-whisky">Bar</span>
-      </div>
-      <a class="cl-link" href="https://www.18standrews.co.uk" target="_blank">↗</a>
-    </div>
-  </div>
-
-  <div class="cl-location-header">
-    <div class="cl-location-pill">St Andrews — Food</div>
-    <div class="cl-location-line"></div>
-  </div>
-  <div class="cl-card">
-    <div class="cl-item" data-id="tailend">
-      <div class="cl-box"><span class="cl-tick">✓</span></div>
-      <div class="cl-info">
-        <div class="cl-name">Tailend</div>
-        <div class="cl-sub">Best fish & chips in St Andrews — reservations a must</div>
-        <span class="cl-tag cl-tag-food">Food</span><span class="cl-tag cl-tag-res">Book ahead</span>
-      </div>
-      <a class="cl-link" href="https://www.thetailend.co.uk" target="_blank">↗</a>
-    </div>
-    <div class="cl-item" data-id="balgove">
-      <div class="cl-box"><span class="cl-tick">✓</span></div>
-      <div class="cl-info">
-        <div class="cl-name">Balgove Steak Barn</div>
-        <div class="cl-sub">Wood-fired steaks on a working farm — short cab ride, book ahead</div>
-        <span class="cl-tag cl-tag-food">Food</span><span class="cl-tag cl-tag-res">Book ahead</span>
-      </div>
-      <a class="cl-link" href="https://www.balgove.com" target="_blank">↗</a>
-    </div>
-    <div class="cl-item" data-id="saintssizzle">
-      <div class="cl-box"><span class="cl-tick">✓</span></div>
-      <div class="cl-info">
-        <div class="cl-name">Saints Sizzle</div>
-        <div class="cl-sub">Best burgers in town, on the Scores next to the Aquarium with sea views</div>
-        <span class="cl-tag cl-tag-food">Food</span>
-      </div>
-      <a class="cl-link" href="https://www.saintssizzle.co.uk" target="_blank">↗</a>
-    </div>
-    <div class="cl-item" data-id="forgans">
-      <div class="cl-box"><span class="cl-tick">✓</span></div>
-      <div class="cl-info">
-        <div class="cl-name">Forgan's</div>
-        <div class="cl-sub">Lively, good for a group — sustainable Scottish produce</div>
-        <span class="cl-tag cl-tag-food">Food</span>
-      </div>
-      <a class="cl-link" href="https://www.forgans.co.uk" target="_blank">↗</a>
-    </div>
-    <div class="cl-item" data-id="jahangir">
-      <div class="cl-box"><span class="cl-tick">✓</span></div>
-      <div class="cl-info">
-        <div class="cl-name">Jahangir</div>
-        <div class="cl-sub">Award-winning curry house, local favourite — book ahead</div>
-        <span class="cl-tag cl-tag-food">Food</span><span class="cl-tag cl-tag-res">Book ahead</span>
-      </div>
-      <a class="cl-link" href="https://jahangirstandrews.co.uk" target="_blank">↗</a>
-    </div>
-    <div class="cl-item" data-id="janettas">
-      <div class="cl-box"><span class="cl-tick">✓</span></div>
-      <div class="cl-info">
-        <div class="cl-name">Janetta's Ice Cream</div>
-        <div class="cl-sub">St Andrews institution since 1908</div>
-        <span class="cl-tag cl-tag-food">Food</span>
-      </div>
-      <a class="cl-link" href="https://www.janettas.co.uk" target="_blank">↗</a>
-    </div>
-    <div class="cl-item" data-id="anstruther">
-      <div class="cl-box"><span class="cl-tick">✓</span></div>
-      <div class="cl-info">
-        <div class="cl-name">Anstruther Fish Bar</div>
-        <div class="cl-sub">~25 min drive — award-winning chippy on the harbour. Anstruther Golf Club (Old Tom Morris, 9 holes) is literally next door.</div>
-        <span class="cl-tag cl-tag-food">Food</span>
-      </div>
-      <a class="cl-link" href="https://www.anstrutherfishbar.co.uk" target="_blank">↗</a>
-    </div>
-  </div>
-
-  <div class="cl-location-header">
-    <div class="cl-location-pill">St Andrews — Activities</div>
-    <div class="cl-location-line"></div>
-  </div>
-  <div class="cl-card">
-    <div class="cl-item" data-id="himalayas">
-      <div class="cl-box"><span class="cl-tick">✓</span></div>
-      <div class="cl-info">
-        <div class="cl-name">The Himalayas Putting Course</div>
-        <div class="cl-sub">Old Tom Morris design — 9 or 18 holes, nominal fee, wildly fun</div>
-        <span class="cl-tag cl-tag-activity">Activity</span>
-      </div>
-      <a class="cl-link" href="https://www.standrews.com/play/the-himalayas" target="_blank">↗</a>
-    </div>
-    <div class="cl-item" data-id="graves">
-      <div class="cl-box"><span class="cl-tick">✓</span></div>
-      <div class="cl-info">
-        <div class="cl-name">Old & Young Tom Morris Graves</div>
-        <div class="cl-sub">Cathedral ruins, short walk from town — "pretty special"</div>
-        <span class="cl-tag cl-tag-activity">Activity</span>
-      </div>
-      <a class="cl-link" href="https://www.google.com/maps/search/Cathedral+Cemetery+St+Andrews" target="_blank">↗</a>
-    </div>
-    <div class="cl-item" data-id="walkingtour">
-      <div class="cl-box"><span class="cl-tick">✓</span></div>
-      <div class="cl-info">
-        <div class="cl-name">Walking Tour of St Andrews</div>
-        <div class="cl-sub">Cathedral ruins, castle, West Sands, Old Course — 90 min self-guided or guided tour</div>
-        <span class="cl-tag cl-tag-activity">Activity</span>
-      </div>
-      <a class="cl-link" href="https://www.visitstandrews.com/things-to-do/walking-tours" target="_blank">↗</a>
-    </div>
-  </div>
-
-  <div class="cl-location-header">
-    <div class="cl-location-pill">North Berwick — Thu Jun 11</div>
-    <div class="cl-location-line"></div>
-  </div>
-  <div class="cl-card">
-    <div class="cl-item" data-id="lobstershack">
-      <div class="cl-box"><span class="cl-tick">✓</span></div>
-      <div class="cl-info">
-        <div class="cl-name">The Lobster Shack</div>
-        <div class="cl-sub">Harbourside — pre-round. Check @lobstershacknb, weather dependent</div>
-        <span class="cl-tag cl-tag-food">Food</span><span class="cl-tag cl-tag-res">Weather dep.</span>
-      </div>
-      <a class="cl-link" href="https://www.lobstershack.co.uk" target="_blank">↗</a>
-    </div>
-  </div>
-
-  <div class="cl-location-header">
-    <div class="cl-location-pill">Edinburgh — Thu–Fri nights</div>
-    <div class="cl-location-line"></div>
-  </div>
-  <div class="cl-card">
-    <div class="cl-item" data-id="bowbar">
-      <div class="cl-box"><span class="cl-tick">✓</span></div>
-      <div class="cl-info">
-        <div class="cl-name">The Bow Bar</div>
-        <div class="cl-sub">Classic Edinburgh pub — 300+ whiskies, one of the city's best</div>
-        <span class="cl-tag cl-tag-whisky">Whisky</span>
-      </div>
-      <a class="cl-link" href="https://www.thebowbar.co.uk" target="_blank">↗</a>
-    </div>
-    <div class="cl-item" data-id="guilford">
-      <div class="cl-box"><span class="cl-tick">✓</span></div>
-      <div class="cl-info">
-        <div class="cl-name">Guilford Arms</div>
-        <div class="cl-sub">Stunning Victorian pub interior, excellent real ales</div>
-        <span class="cl-tag cl-tag-pub">Pub</span>
-      </div>
-      <a class="cl-link" href="https://www.guilfordarms.com" target="_blank">↗</a>
-    </div>
-    <div class="cl-item" data-id="whiski">
-      <div class="cl-box"><span class="cl-tick">✓</span></div>
-      <div class="cl-info">
-        <div class="cl-name">Whiski Bar</div>
-        <div class="cl-sub">Royal Mile — 300+ malts, live Scottish folk music every night</div>
-        <span class="cl-tag cl-tag-whisky">Whisky</span>
-      </div>
-      <a class="cl-link" href="https://whiskibar.co.uk" target="_blank">↗</a>
-    </div>
-    <div class="cl-item" data-id="castle">
-      <div class="cl-box"><span class="cl-tick">✓</span></div>
-      <div class="cl-info">
-        <div class="cl-name">Edinburgh Castle / Royal Mile</div>
-        <div class="cl-sub">You're right there — worth a wander and a wee dram</div>
-        <span class="cl-tag cl-tag-activity">Activity</span>
-      </div>
-      <a class="cl-link" href="https://www.edinburghcastle.scot" target="_blank">↗</a>
-    </div>
-  </div>
-
-  <div style="text-align:center;font-size:0.72rem;color:var(--text-muted);margin-top:1.5rem;padding-bottom:1rem">
-    Kitchens close early — book Tailend, Balgove & Jahangir in advance 🍽️
-  </div>
-
-</div>
-
 <div class="footer">Made with ⛳ for the lads · <span>Scotland 2026</span></div>
 
 <script>
@@ -877,44 +622,25 @@ function setScoreType(type, el) {
 
 // ── Modal ─────────────────────────────────────────────────────
 function openScoreModal() {
-  // Auto-select the round currently being viewed (or first round if on Leaderboard)
-  const sel = document.getElementById('modal-round');
-  const targetRound = (currentRoundView !== 'Leaderboard' && ROUNDS.includes(currentRoundView))
-    ? currentRoundView : ROUNDS[0];
-  sel.value = targetRound;
-  populateScoreInputs(targetRound);
-  sel.onchange = () => populateScoreInputs(sel.value);
-  document.getElementById('scoreModal').classList.add('open');
-}
-
-function populateScoreInputs(round) {
-  const rk = roundKey(round);
-  document.getElementById('score-inputs').innerHTML = PLAYERS.map(p => {
-    const pk = playerKey(p);
-    const sid = pk; // use sanitized key as input ID suffix — no spaces
-    const existing = (scores[rk] && scores[rk][pk]) || {};
-    const g = existing.gross != null ? existing.gross : '';
-    const n = existing.net != null ? existing.net : '';
-    const s = existing.stbl != null ? existing.stbl : '';
-    return `
+  document.getElementById('score-inputs').innerHTML = PLAYERS.map(p => `
     <div style="border-bottom:1px solid var(--cream-dark);padding:0.6rem 0;margin-bottom:0.25rem">
       <div style="font-weight:500;font-size:0.85rem;margin-bottom:0.4rem;color:var(--green)">${p}</div>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.4rem">
         <div>
           <label style="display:block;font-size:0.65rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:2px">Gross</label>
-          <input type="number" id="gross-${sid}" placeholder="—" min="60" max="130" value="${g}" style="width:100%;padding:0.45rem 0.4rem;border:1px solid var(--border);border-radius:7px;font-family:'DM Sans',sans-serif;font-size:0.9rem;background:var(--cream);text-align:center">
+          <input type="number" id="gross-${p}" placeholder="—" min="60" max="130" style="width:100%;padding:0.45rem 0.4rem;border:1px solid var(--border);border-radius:7px;font-family:'DM Sans',sans-serif;font-size:0.9rem;background:var(--cream);text-align:center">
         </div>
         <div>
           <label style="display:block;font-size:0.65rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:2px">Net</label>
-          <input type="number" id="net-${sid}" placeholder="—" min="50" max="130" value="${n}" style="width:100%;padding:0.45rem 0.4rem;border:1px solid var(--border);border-radius:7px;font-family:'DM Sans',sans-serif;font-size:0.9rem;background:var(--cream);text-align:center">
+          <input type="number" id="net-${p}" placeholder="—" min="50" max="130" style="width:100%;padding:0.45rem 0.4rem;border:1px solid var(--border);border-radius:7px;font-family:'DM Sans',sans-serif;font-size:0.9rem;background:var(--cream);text-align:center">
         </div>
         <div>
           <label style="display:block;font-size:0.65rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:2px">Stbl</label>
-          <input type="number" id="stbl-${sid}" placeholder="—" min="0" max="50" value="${s}" style="width:100%;padding:0.45rem 0.4rem;border:1px solid var(--border);border-radius:7px;font-family:'DM Sans',sans-serif;font-size:0.9rem;background:var(--cream);text-align:center">
+          <input type="number" id="stbl-${p}" placeholder="—" min="0" max="50" style="width:100%;padding:0.45rem 0.4rem;border:1px solid var(--border);border-radius:7px;font-family:'DM Sans',sans-serif;font-size:0.9rem;background:var(--cream);text-align:center">
         </div>
       </div>
-    </div>`;
-  }).join('');
+    </div>`).join('');
+  document.getElementById('scoreModal').classList.add('open');
 }
 function closeScoreModal() { document.getElementById('scoreModal').classList.remove('open'); }
 
@@ -927,10 +653,10 @@ async function saveScores() {
   if (!scores[roundKey]) scores[roundKey] = {};
 
   for (const p of PLAYERS) {
-    const pKey = playerKey(p);
-    const g = document.getElementById('gross-'+pKey).value;
-    const n = document.getElementById('net-'+pKey).value;
-    const s = document.getElementById('stbl-'+pKey).value;
+    const pKey = p.replace(/[^a-zA-Z0-9]/g,'_');
+    const g = document.getElementById('gross-'+p).value;
+    const n = document.getElementById('net-'+p).value;
+    const s = document.getElementById('stbl-'+p).value;
     if (g || n || s) {
       if (!scores[roundKey][pKey]) scores[roundKey][pKey] = {};
       if (g) scores[roundKey][pKey].gross = parseInt(g);
@@ -954,8 +680,7 @@ function getVal(round, player, type) {
   const d = scores[rk] && scores[rk][pk];
   if (!d) return null;
   if (typeof d === 'number') return type === 'gross' ? d : null;
-  const key = type === 'stableford' ? 'stbl' : type;
-  return d[key] != null ? d[key] : null;
+  return d[type] != null ? d[type] : null;
 }
 
 function rankLabel(i) { return i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':''; }
@@ -1040,44 +765,6 @@ function renderRound(round) {
   scores = await fbGet();
   renderScores();
 })();
-
-// ── Checklist ─────────────────────────────────────────────────
-const CL_KEY = 'scotland2026_checklist';
-let clChecked = JSON.parse(localStorage.getItem(CL_KEY) || '{}');
-
-function clUpdateProgress() {
-  const items = document.querySelectorAll('.cl-item');
-  const done = document.querySelectorAll('.cl-item.checked').length;
-  const total = items.length;
-  document.getElementById('cl-prog-label').textContent = done + ' of ' + total + ' done';
-  document.getElementById('cl-prog-fill').style.width = total ? Math.round((done/total)*100)+'%' : '0%';
-}
-
-function clToggle(el) {
-  const id = el.dataset.id;
-  const box = el.querySelector('.cl-box');
-  el.classList.toggle('checked');
-  box.classList.toggle('done');
-  clChecked[id] = el.classList.contains('checked');
-  localStorage.setItem(CL_KEY, JSON.stringify(clChecked));
-  clUpdateProgress();
-}
-
-function clInit() {
-  document.querySelectorAll('.cl-item').forEach(item => {
-    const id = item.dataset.id;
-    if (clChecked[id]) {
-      item.classList.add('checked');
-      item.querySelector('.cl-box').classList.add('done');
-    }
-    item.addEventListener('click', function(e) {
-      if (e.target.tagName === 'A') return;
-      clToggle(this);
-    });
-  });
-  clUpdateProgress();
-}
-clInit();
 </script>
 </body>
 </html>
