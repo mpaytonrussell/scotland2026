@@ -120,6 +120,16 @@
   .score-type-toggle { display:flex; gap:0.4rem; margin-bottom:1rem; }
   .stt-btn { flex:1; padding:0.5rem; background:var(--card-bg); border:1px solid var(--border); border-radius:20px; font-family:'DM Sans',sans-serif; font-size:0.8rem; font-weight:500; color:var(--text-muted); cursor:pointer; transition:all 0.15s; }
   .stt-btn.active { background:var(--green); color:var(--white); border-color:var(--green); }
+  .stbl-info { background:var(--card-bg); border:1px solid var(--border); border-radius:12px; margin-bottom:1rem; overflow:hidden; }
+  .stbl-info-toggle { width:100%; display:flex; justify-content:space-between; align-items:center; padding:0.6rem 0.85rem; background:none; border:none; cursor:pointer; font-family:'DM Sans',sans-serif; font-size:0.75rem; font-weight:500; color:var(--text-muted); }
+  .stbl-info-toggle span { color:var(--green); font-size:0.65rem; text-transform:uppercase; letter-spacing:0.07em; }
+  .stbl-info-body { display:none; padding:0 0.85rem 0.75rem; }
+  .stbl-info-body.open { display:block; }
+  .stbl-table { width:100%; border-collapse:collapse; font-size:0.75rem; margin-top:0.4rem; }
+  .stbl-table td { padding:0.3rem 0.5rem; border-bottom:1px solid var(--cream-dark); color:var(--text); }
+  .stbl-table tr:last-child td { border-bottom:none; }
+  .stbl-table td:last-child { text-align:right; font-weight:600; color:var(--green); }
+  .stbl-note { font-size:0.71rem; color:var(--text-muted); margin-top:0.5rem; }
 
   /* MAP */
   .map-container { border-radius: 14px; overflow: hidden; border: 1px solid var(--border); margin-bottom: 1rem; height: 400px; }
@@ -404,6 +414,23 @@
     <button class="stt-btn" onclick="setScoreType('net',this)">Net</button>
     <button class="stt-btn" onclick="setScoreType('stableford',this)">Stableford</button>
   </div>
+
+  <div class="stbl-info">
+    <button class="stbl-info-toggle" onclick="this.nextElementSibling.classList.toggle('open');this.querySelector('span').textContent=this.nextElementSibling.classList.contains('open')?'▲ hide':'▼ how it works'">
+      How Stableford scoring works <span>▼ how it works</span>
+    </button>
+    <div class="stbl-info-body">
+      <table class="stbl-table">
+        <tr><td>Double bogey or worse</td><td>0 pts</td></tr>
+        <tr><td>Bogey</td><td>1 pt</td></tr>
+        <tr><td>Par</td><td>2 pts</td></tr>
+        <tr><td>Birdie</td><td>3 pts</td></tr>
+        <tr><td>Eagle</td><td>4 pts</td></tr>
+      </table>
+      <p class="stbl-note">Higher score wins. A solid round = 36 pts (2 per hole). Anything above that means you beat your handicap.</p>
+    </div>
+  </div>
+
   <div class="round-tabs" id="roundTabs"></div>
   <button class="add-score-btn" onclick="openScoreModal()">+ Enter Scores for a Round</button>
   <div id="scoreboard"></div>
