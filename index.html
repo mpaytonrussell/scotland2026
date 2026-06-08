@@ -960,7 +960,8 @@ function getVal(round, player, type) {
   const d = scores[rk] && scores[rk][pk];
   if (!d) return null;
   if (typeof d === 'number') return type === 'gross' ? d : null;
-  return d[type] != null ? d[type] : null;
+  const key = type === 'stableford' ? 'stbl' : type;
+  return d[key] != null ? d[key] : null;
 }
 
 function rankLabel(i) { return i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':''; }
